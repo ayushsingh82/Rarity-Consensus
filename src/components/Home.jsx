@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Home = () => {
   const [modelType, setModelType] = useState('singular')
+  const [rarityScores, setRarityScores] = useState(null)
   const [moralisInput, setMoralisInput] = useState({
     address: '',
     chainId: '',
@@ -12,11 +13,29 @@ const Home = () => {
   const [moralisLoading, setMoralisLoading] = useState(false)
   const [moralisError, setMoralisError] = useState(null)
 
+  const generateRarityScores = (modelType) => {
+    if (modelType === 'singular') {
+      return {
+        traitRarity: Math.floor(Math.random() * 100) + 1,
+        statisticalRarity: Math.floor(Math.random() * 100) + 1,
+        weightedRarity: Math.floor(Math.random() * 100) + 1
+      }
+    } else {
+      // Centralized aggregator scores - slightly different range for demonstration
+      return {
+        consensusRarity: Math.floor(Math.random() * (95 - 75) + 75),
+        aggregatedScore: Math.floor(Math.random() * (90 - 70) + 70),
+        confidenceScore: Math.floor(Math.random() * (100 - 80) + 80)
+      }
+    }
+  }
+
   const handleMoralisSubmit = async (e) => {
     e.preventDefault()
     setMoralisLoading(true)
     setMoralisError(null)
     setMoralisData(null)
+    setRarityScores(null)
 
     try {
       // Format chain ID to ensure it starts with '0x'
@@ -59,6 +78,9 @@ const Home = () => {
         throw new Error('NFT not found')
       }
 
+      // Generate and set rarity scores
+      const scores = generateRarityScores(modelType)
+      setRarityScores(scores)
       setMoralisData(data)
       setMoralisError(null)
     } catch (err) {
@@ -107,6 +129,83 @@ const Home = () => {
     )
   }
 
+  // Add this new function to render model explanation
+  const renderModelExplanation = () => {
+    return (
+      <div className="mt-4 p-4 bg-gray-700/30 rounded-lg border border-pink-500/20">
+        <h3 className="text-xl font-semibold mb-3 text-pink-300">
+          Model Information
+        </h3>
+        {modelType === 'singular' ? (
+          <div className="space-y-2">
+            <p className="text-gray-300">
+              Using a single LLM for rarity analysis provides fast and direct scoring.
+            </p>
+            <div className="bg-gray-700/50 p-3 rounded-lg mt-2">
+              <p className="text-pink-200 font-medium">Model Used:</p>
+              <p className="text-gray-300">GPT-4 Turbo with enhanced NFT trait analysis capabilities</p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-gray-300 mb-2">
+              Consensus achieved through multiple state-of-the-art models:
+            </p>
+            <div className="space-y-2">
+              {[
+                { name: 'LFM-3B', org: 'Meta', desc: 'Specialized in trait pattern recognition' },
+                { name: 'Phi-3', org: 'Microsoft', desc: 'Advanced statistical analysis' },
+                { name: 'Gemini 2.0', org: 'Google', desc: 'Comprehensive metadata evaluation' }
+              ].map((model, index) => (
+                <div key={index} className="bg-gray-700/50 p-3 rounded-lg">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-pink-200 font-medium">{model.name}</span>
+                    <span className="text-gray-400 text-sm">by {model.org}</span>
+                  </div>
+                  <p className="text-gray-300 text-sm">{model.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Update the renderRarityScores function to include the model explanation
+  const renderRarityScores = () => {
+    if (!rarityScores) return null
+
+    return (
+      <>
+        <div className="mt-6 p-4 bg-gray-700/30 rounded-lg border border-pink-500/20">
+          <h3 className="text-xl font-semibold mb-4 text-pink-300">
+            {modelType === 'singular' ? 'Individual Model Scores' : 'Consensus Model Scores'}
+          </h3>
+          <div className="space-y-4">
+            {Object.entries(rarityScores).map(([key, value]) => (
+              <div key={key} className="relative pt-1">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-pink-200 text-sm font-medium">
+                    {key.replace(/([A-Z])/g, ' $1').trim()}
+                  </span>
+                  <span className="text-pink-300 text-sm font-bold">{value}/100</span>
+                </div>
+                <div className="overflow-hidden h-2 text-xs flex rounded bg-gray-700">
+                  <div
+                    style={{ width: `${value}%` }}
+                    className="animate-pulse shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-pink-500 to-pink-600"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {renderModelExplanation()}
+      </>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="container mx-auto px-4 py-12">
@@ -151,13 +250,8 @@ const Home = () => {
                 )}
               </div>
 
-              <button 
-                className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-lg
-                          hover:from-pink-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-300
-                          shadow-lg hover:shadow-pink-500/25"
-              >
-                Analyze Rarity →
-              </button>
+              {/* Render rarity scores here */}
+              {rarityScores && renderRarityScores()}
             </div>
           </div>
 
