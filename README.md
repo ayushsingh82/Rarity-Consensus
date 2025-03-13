@@ -3,48 +3,79 @@
 ## 🔍 Overview  
 **Rarity-Consensus** is a decentralized application (DApp) that leverages **consensus learning from multiple models** to verify **NFT Rarity data** and detect fraudulent activities. By aggregating insights from different **machine learning models and API sources**, our system ensures accurate Rarity distribution and prevents fraudulent activities like wash trading, fake listings, and metadata manipulation.  
 
-## 🎯 Why Rarity-Consensus?  
-🔹 **Royalties Should Be Fair** – Many NFT platforms fail to enforce proper Rarity distribution.  
-🔹 **Fraud Detection Is Crucial** – Fake trades & wash trading distort NFT market value.  
-🔹 **Decentralized Consensus Approach** – We use multiple models to verify royalties and detect fraud, ensuring unbiased results.  
+
+# NFT Rarity Scoring Methods
+
+## Overview
+NFT rarity scoring helps determine the uniqueness and value of an NFT in a collection. Below are different methods used for calculating rarity based on metadata traits.
 
 ---
 
-## 💰 Understanding NFT Royalties  
+## 📌 1️⃣ Trait Rarity Score (Basic Probability Method)
+### 💡 Formula:
+```math
+Trait Rarity = \frac{1}{Trait Occurrence in Collection / Total NFTs}
+```
+### 📌 Example:
+- **NFT Collection:** 10,000 NFTs  
+- **Trait:** "Golden Hat" appears in **100 NFTs**  
+- **Rarity Score:**  
+```math
+1 / (100 / 10,000) = 100
+```
 
-NFT **royalties** refer to a **percentage of the sale price that the original creator receives every time the NFT is resold** on a marketplace.  
-
-### How NFT Royalties Work  
-1️⃣ **Set at Minting** – The creator specifies a Rarity percentage (e.g., 5-10%) when minting the NFT.  
-2️⃣ **Enforced by Smart Contracts** – Some blockchains enforce Rarity payments automatically.  
-3️⃣ **Triggered on Resale** – When the NFT is resold, a portion of the sale price is sent to the creator.  
-
-### Example of NFT Royalties  
-- **Artist mints an NFT** and sets a **10% Rarity**.  
-- The NFT is **sold for $1,000** → The artist gets **$100**.  
-- Later, the buyer **resells it for $5,000** → The artist gets **$500**.  
-
----
-
-## 🚨 Issues with NFT Royalties in the Current Market  
-
-🚨 **Marketplaces Bypassing Royalties** – Some platforms allow NFT trading without enforcing Rarity payments, which means creators do not get their fair share.  
-🚨 **Not All Blockchains Support Royalties** – Some blockchains rely on centralized enforcement rather than automated smart contract enforcement.  
-🚨 **Wash Trading Manipulations** – Fake trades are executed between wallets to avoid paying royalties or artificially inflate an NFT’s value.  
-🚨 **Metadata Manipulation** – Some traders alter NFT metadata to deceive buyers about the authenticity and Rarity structure.  
-🚨 **Rarity Discrepancies Across Marketplaces** – Different platforms may show varying Rarity structures, leading to confusion and lost earnings.  
-
-**🎯 Solution?** **RarityGuard**! Our system verifies NFT metadata, detects fraud, and ensures proper Rarity enforcement using a **consensus learning approach**.  
+✅ **Pros:** Simple and widely used.  
+❌ **Cons:** Doesn't consider trait importance (some rare traits are more valuable than others).  
 
 ---
 
-## ⚙️ How It Works  
+## 📌 2️⃣ Average Trait Rarity Score
+### 💡 Formula:
+```math
+Avg. Rarity = \frac{\sum (Rarity of Each Trait)}{Total Traits}
+```
+### 📌 Example:
+If an NFT has:
+- **Golden Hat (Rarity: 100)**  
+- **Red Eyes (Rarity: 50)**  
+- **Fire Background (Rarity: 20)**  
 
-1️⃣ **Fetch NFT Metadata** – We gather NFT data from OpenSea, Moralis, LooksRare, and Alchemy.  
-2️⃣ **Apply Machine Learning Models** – Various fraud-detection models analyze the data.  
-3️⃣ **Consensus Learning** – The system cross-verifies data using multiple AI models.  
-4️⃣ **Detect Anomalies & Fraud** – Suspicious Rarity inconsistencies are flagged.  
-5️⃣ **Transparent Results** – Users can verify the legitimacy of NFT Rarity distributions.  
+```math
+(100 + 50 + 20) / 3 = 56.67
+```
+
+✅ **Pros:** Simple to calculate.  
+❌ **Cons:** Rare traits can be overshadowed by common traits.  
+
+---
+
+## 📌 3️⃣ Custom Weighted Rarity Score (Trait Importance Considered)
+### 💡 Formula:
+```math
+Weighted Rarity Score = \sum (Trait Rarity \times Weight Factor)
+```
+### 📌 Example:
+If **Golden Hat** is **more important** than background color, we can assign it a **weight of 2**, while others get **1**:
+```math
+(100 \times 2) + (20 \times 1) + (10 \times 1) = 230
+```
+
+✅ **Pros:** More accurate for collections with "hero traits" (like BAYC gold fur).  
+❌ **Cons:** Requires **manual weighting**, which may be **subjective**.  
+
+---
+
+## 📌 Conclusion
+| **Method** | **Best For** | **Commonly Used?** |
+|------------|-------------|------------------|
+| **Trait Rarity Score** | Simple rankings | ✅ Yes |
+| **Average Trait Rarity** | Quick comparison | ❌ No |
+| **Custom Weighted Rarity Score** | Custom collections | ✅ Yes |
+
+If you're building an **NFT rarity analysis system**, combining **Weighted Rarity Score** with **Metadata Analysis** is the most effective approach! 🚀
+
+
+
 
 ## 🏗️ Tech Stack  
 - **Machine Learning Models:** Random Forest, SVM, Neural Networks for fraud detection.  
@@ -52,7 +83,7 @@ NFT **royalties** refer to a **percentage of the sale price that the original cr
 - **Backend:** Python, FastAPI  
 - **Blockchain:** Solidity (for storing verified fraud reports)  
 - **Frontend:** React, TailwindCSS  
-- **Database:** IPFS (for fraud-proof storage)  
+
 
 ## 🔗 API Integrations  
 🔸 **OpenSea API** – Fetches NFT metadata & Rarity details.  
