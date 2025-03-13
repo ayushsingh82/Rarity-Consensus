@@ -31,8 +31,8 @@ const Home = () => {
         }
       }
 
-      // First get the NFT metadata
-      const metadataUrl = `https://deep-index.moralis.io/api/v2/nft/${moralisInput.address}/token/${moralisInput.tokenId}?chain=${formattedChainId}&format=decimal&normalizeMetadata=true`
+      // Use the correct API endpoint format
+      const metadataUrl = `https://deep-index.moralis.io/api/v2/nft/${moralisInput.address}?chain=${formattedChainId}&format=decimal&token_id=${moralisInput.tokenId}&normalizeMetadata=true&media_items=false`
       console.log('Fetching from:', metadataUrl)
 
       const response = await fetch(metadataUrl, options)
@@ -44,15 +44,18 @@ const Home = () => {
           const errorJson = JSON.parse(errorText)
           throw new Error(errorJson.message || `Failed to fetch NFT data: ${response.statusText}`)
         } catch (e) {
-          throw new Error(`Failed to fetch NFT data: ${response.statusText}`)
+          throw new Error(`Failed to fetch NFT data: ${response.status} ${response.statusText}`)
         }
       }
 
-      const data = await response.json()
-      console.log('API Response:', data)
+      const responseData = await response.json()
+      console.log('API Response:', responseData)
 
+      // The API returns an array of results, we need the first one
+      const data = responseData.result?.[0]
+      
       if (!data) {
-        throw new Error('No data received from API')
+        throw new Error('NFT not found')
       }
 
       setMoralisData(data)
@@ -224,3 +227,8 @@ const Home = () => {
 }
 
 export default Home
+
+
+// demo address for contract - 0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB
+
+// token id 1 , chain id 0x1
