@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Home = () => {
+  const [modelType, setModelType] = useState('singular')
   const [moralisInput, setMoralisInput] = useState({
     address: '',
     chainId: '',
@@ -109,117 +110,122 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="container mx-auto px-4 py-12">
-        <h1 className="text-5xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-300 animate-pulse">
-          Flare Consensus NFT Platform
+        <h1 className="text-3xl font-bold text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-300 animate-pulse">
+          Flare Consensus Model NFT Rarity check Platform
         </h1>
         
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Rarity Scoring Card */}
+          {/* Rarity Analysis Card */}
           <div className="transform hover:scale-105 transition-all duration-300">
-            <div className="bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-500/20 hover:border-pink-500/50 transition-colors">
+            <div className="bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-500/20 hover:border-pink-500/50 transition-colors h-full">
               <h2 className="text-2xl font-semibold mb-4 text-pink-400">
-                Consensus-Driven Rarity Scoring
+                NFT Rarity Analysis
               </h2>
-              <ul className="list-disc pl-6 mb-6 space-y-3 text-gray-300">
-                <li className="hover:text-pink-200 transition-colors">Multi-model consensus for accurate rarity analysis</li>
-                <li className="hover:text-pink-200 transition-colors">Decentralized validation across Flare nodes</li>
-                <li className="hover:text-pink-200 transition-colors">Cross-chain NFT metadata aggregation and verification</li>
-              </ul>
-              <Link 
-                to="/rarity" 
-                className="inline-block bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-lg
+              
+              <div className="mb-6">
+                <label className="block text-pink-300 mb-2">Select Analysis Model</label>
+                <select 
+                  value={modelType}
+                  onChange={(e) => setModelType(e.target.value)}
+                  className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
+                           focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
+                >
+                  <option value="singular">Singular Model Approach</option>
+                  <option value="centralized">Centralized Aggregator</option>
+                </select>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                {modelType === 'singular' ? (
+                  <ul className="list-disc pl-6 space-y-3 text-gray-300">
+                    <li className="hover:text-pink-200 transition-colors">Individual model analysis for trait rarity</li>
+                    <li className="hover:text-pink-200 transition-colors">Direct scoring without aggregation</li>
+                    <li className="hover:text-pink-200 transition-colors">Fast and efficient processing</li>
+                  </ul>
+                ) : (
+                  <ul className="list-disc pl-6 space-y-3 text-gray-300">
+                    <li className="hover:text-pink-200 transition-colors">Multi-model consensus aggregation</li>
+                    <li className="hover:text-pink-200 transition-colors">Enhanced accuracy through combined analysis</li>
+                    <li className="hover:text-pink-200 transition-colors">Comprehensive rarity evaluation</li>
+                  </ul>
+                )}
+              </div>
+
+              <button 
+                className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-lg
                           hover:from-pink-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-300
                           shadow-lg hover:shadow-pink-500/25"
               >
-                Check Consensus Score →
-              </Link>
-            </div>
-          </div>
-
-          {/* Fraud Detection Card */}
-          <div className="transform hover:scale-105 transition-all duration-300">
-            <div className="bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-500/20 hover:border-pink-500/50 transition-colors">
-              <h2 className="text-2xl font-semibold mb-4 text-pink-400">
-                Consensus-Based Fraud Prevention
-              </h2>
-              <ul className="list-disc pl-6 mb-6 space-y-3 text-gray-300">
-                <li className="hover:text-pink-200 transition-colors">Distributed consensus for fraud detection</li>
-                <li className="hover:text-pink-200 transition-colors">Multi-chain validation through Flare's State Connector</li>
-                <li className="hover:text-pink-200 transition-colors">Decentralized attestation of NFT authenticity</li>
-              </ul>
-              <Link 
-                to="/fraud-detection" 
-                className="inline-block bg-gradient-to-r from-pink-500 to-pink-600 text-white px-6 py-3 rounded-lg
-                          hover:from-pink-600 hover:to-pink-700 transform hover:scale-105 transition-all duration-300
-                          shadow-lg hover:shadow-pink-500/25"
-              >
-                Verify Consensus →
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Moralis NFT Metadata Resync Section */}
-        <div className="mt-16 bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-500/20">
-          <h2 className="text-3xl font-semibold mb-6 text-pink-400 text-center">
-            NFT Metadata Resync
-          </h2>
-          
-          <form onSubmit={handleMoralisSubmit} className="max-w-2xl mx-auto space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <input
-                type="text"
-                value={moralisInput.address}
-                onChange={(e) => setMoralisInput(prev => ({...prev, address: e.target.value}))}
-                placeholder="Contract Address"
-                className="px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
-                         focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
-              />
-              <input
-                type="text"
-                value={moralisInput.chainId}
-                onChange={(e) => setMoralisInput(prev => ({...prev, chainId: e.target.value}))}
-                placeholder="Chain ID (1 for ETH, 137 for Polygon)"
-                className="px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
-                         focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
-              />
-              <input
-                type="text"
-                value={moralisInput.tokenId}
-                onChange={(e) => setMoralisInput(prev => ({...prev, tokenId: e.target.value}))}
-                placeholder="Token ID"
-                className="px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
-                         focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
-              />
-            </div>
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                disabled={moralisLoading || !moralisInput.address || !moralisInput.chainId || !moralisInput.tokenId}
-                className={`px-8 py-3 rounded-lg font-semibold transition-all duration-300
-                          ${moralisLoading || !moralisInput.address || !moralisInput.chainId || !moralisInput.tokenId
-                            ? 'bg-gray-600 cursor-not-allowed' 
-                            : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 transform hover:scale-105'
-                          }`}
-              >
-                {moralisLoading ? 'Resyncing...' : 'Resync Metadata'}
+                Analyze Rarity →
               </button>
             </div>
-          </form>
+          </div>
 
-          {/* Moralis Results Display */}
-          {moralisError && (
-            <div className="mt-6 p-4 bg-red-500/20 border border-red-500/40 rounded-lg text-red-300">
-              {moralisError}
-            </div>
-          )}
+          {/* NFT Metadata Section */}
+          <div className="transform hover:scale-105 transition-all duration-300">
+            <div className="bg-gray-800 p-8 rounded-xl shadow-lg border border-pink-500/20 hover:border-pink-500/50 transition-colors h-full">
+              <h2 className="text-2xl font-semibold mb-4 text-pink-400">
+                NFT Metadata 
+              </h2>
+              
+              <form onSubmit={handleMoralisSubmit} className="space-y-4">
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={moralisInput.address}
+                    onChange={(e) => setMoralisInput(prev => ({...prev, address: e.target.value}))}
+                    placeholder="Contract Address"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
+                             focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
+                  />
+                  <input
+                    type="text"
+                    value={moralisInput.chainId}
+                    onChange={(e) => setMoralisInput(prev => ({...prev, chainId: e.target.value}))}
+                    placeholder="Chain ID (1 for ETH, 137 for Polygon)"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
+                             focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
+                  />
+                  <input
+                    type="text"
+                    value={moralisInput.tokenId}
+                    onChange={(e) => setMoralisInput(prev => ({...prev, tokenId: e.target.value}))}
+                    placeholder="Token ID"
+                    className="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-pink-500/20 
+                             focus:border-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
+                  />
+                </div>
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    disabled={moralisLoading || !moralisInput.address || !moralisInput.chainId || !moralisInput.tokenId}
+                    className={`w-full px-8 py-3 rounded-lg font-semibold transition-all duration-300
+                              ${moralisLoading || !moralisInput.address || !moralisInput.chainId || !moralisInput.tokenId
+                                ? 'bg-gray-600 cursor-not-allowed' 
+                                : 'bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 transform hover:scale-105'
+                              }`}
+                  >
+                    {moralisLoading ? 'Resyncing...' : 'Resync Metadata'}
+                  </button>
+                </div>
+              </form>
 
-          {moralisData && (
-            <div className="mt-6 p-6 bg-gray-700/50 rounded-lg border border-pink-500/20">
-              <h3 className="text-xl font-semibold mb-4 text-pink-300">NFT Details</h3>
-              {renderNftDetails(moralisData)}
+              {/* Error Display */}
+              {moralisError && (
+                <div className="mt-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-300 text-sm">
+                  {moralisError}
+                </div>
+              )}
+
+              {/* Results Display */}
+              {moralisData && (
+                <div className="mt-4 p-4 bg-gray-700/50 rounded-lg border border-pink-500/20">
+                  <h3 className="text-lg font-semibold mb-3 text-pink-300">NFT Details</h3>
+                  {renderNftDetails(moralisData)}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

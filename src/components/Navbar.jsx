@@ -10,7 +10,7 @@ const Navbar = () => {
           className="text-xl font-bold hover:scale-105 transition-transform duration-300 flex items-center"
         >
           <span className="text-2xl mr-2">⚡</span>
-     Royalty-Consensus
+     Rarity-Consensus
         </Link>
         <div className="space-x-6">
        
